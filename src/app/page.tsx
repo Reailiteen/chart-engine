@@ -344,6 +344,7 @@ export default function Home() {
                 ? new Map(preset.theme.nodeTransforms)
                 : recordToMap(preset.theme.nodeTransforms as any)
         }));
+        setCanvasOffset({ x: -75, y: -90 });
     };
 
     const renderSceneNode = useCallback((node: any, depth = 0): React.ReactNode => {
@@ -387,6 +388,7 @@ export default function Home() {
                 )}
 
                 <button
+                    title={`Select node: ${node.id}`}
                     onClick={() => setSelectedNodeId(node.id)}
                     className={`w-full flex items-center gap-3 p-3 rounded-2xl border transition-all text-left mb-1.5 group relative z-10 ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg active:scale-95' : `border-slate-50 text-slate-400 hover:border-indigo-100 hover:shadow-sm hover:translate-x-1 ${uiMode === 'dark' ? 'bg-slate-800/40 border-slate-700' : 'bg-white'}`}`}
                     style={{ marginLeft: depth * 20 }}
@@ -463,6 +465,7 @@ export default function Home() {
                 {/* Canvas Controls Overlay */}
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 backdrop-blur-xl rounded-2xl border border-white/20 bg-slate-900/40 shadow-2xl z-50">
                     <button
+                        title="Zoom Out"
                         onClick={() => setZoom(prev => Math.max(prev / 1.1, 0.1))}
                         className="p-2.5 rounded-xl hover:bg-white/10 text-white/60 hover:text-white transition-all"
                     >
@@ -472,6 +475,7 @@ export default function Home() {
                         {Math.round(zoom * 100)}%
                     </div>
                     <button
+                        title="Zoom In"
                         onClick={() => setZoom(prev => Math.min(prev * 1.1, 10))}
                         className="p-2.5 rounded-xl hover:bg-white/10 text-white/60 hover:text-white transition-all"
                     >
@@ -479,12 +483,12 @@ export default function Home() {
                     </button>
                     <div className="h-4 w-px bg-white/10 mx-1"></div>
                     <button
+                        title="Recenter View"
                         onClick={() => {
                             setZoom(1);
                             setCanvasOffset({ x: 0, y: 0 });
                         }}
                         className="p-2.5 rounded-xl hover:bg-white/10 text-white/60 hover:text-white transition-all"
-                        title="Recenter"
                     >
                         <Focus size={16} />
                     </button>
@@ -493,6 +497,7 @@ export default function Home() {
 
             {/* Floating Sidebars Toggle Controls */}
             <button
+                title={sidebarsOpen.left ? 'Close left sidebar' : 'Open left sidebar'}
                 onClick={() => setSidebarsOpen(prev => ({ ...prev, left: !prev.left }))}
                 className={`absolute top-1/2 -translate-y-1/2 z-50 w-10 h-20 flex items-center justify-center backdrop-blur-xl border border-white/10 rounded-r-3xl transition-all duration-500 group ${sidebarsOpen.left ? 'left-[320px] bg-slate-900/80 text-white shadow-xl' : 'left-0 bg-white/10 text-slate-400 hover:bg-white/20'}`}
             >
@@ -500,6 +505,7 @@ export default function Home() {
             </button>
 
             <button
+                title={sidebarsOpen.right ? 'Close right sidebar' : 'Open right sidebar'}
                 onClick={() => setSidebarsOpen(prev => ({ ...prev, right: !prev.right }))}
                 className={`absolute top-1/2 -translate-y-1/2 z-50 w-10 h-20 flex items-center justify-center backdrop-blur-xl border border-white/10 rounded-l-3xl transition-all duration-500 group ${sidebarsOpen.right ? 'right-[450px] bg-slate-900/80 text-white shadow-xl' : 'right-0 bg-white/10 text-slate-400 hover:bg-white/20'}`}
             >
@@ -520,6 +526,14 @@ export default function Home() {
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Library</p>
                             </div>
                         </div>
+
+                        <button
+                            title="Switch Theme"
+                            onClick={() => setUiMode(prev => prev === 'light' ? 'dark' : 'light')}
+                            className={`p-2.5 rounded-2xl border transition-all ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 text-amber-400 hover:bg-slate-700' : 'bg-slate-50 border-slate-100 text-slate-600 hover:bg-slate-100'}`}
+                        >
+                            {uiMode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                        </button>
                     </div>
 
                     <div className="flex items-center gap-2 mb-6">
@@ -575,6 +589,7 @@ export default function Home() {
                         {PRESETS.map((preset) => (
                             <button
                                 key={preset.id}
+                                title={`Load preset: ${preset.label}`}
                                 onClick={() => loadPreset(preset)}
                                 className={`w-full group text-left p-5 rounded-[32px] border transition-all duration-300 transform hover:-translate-y-1 ${uiMode === 'dark' ? 'bg-slate-800/50 border-slate-700 hover:bg-slate-800 hover:border-indigo-500' : 'bg-slate-50 border-slate-100 hover:bg-white hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10'}`}
                             >
@@ -601,16 +616,6 @@ export default function Home() {
 
             {/* Right Sidebar: Control System (Overlay) */}
             <aside className={`absolute right-0 top-0 h-full w-[450px] border-l flex flex-col overflow-hidden shadow-2xl z-40 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${sidebarsOpen.right ? 'translate-x-0' : 'translate-x-full'} ${uiMode === 'dark' ? 'bg-slate-900/80 border-slate-800 backdrop-blur-3xl' : 'bg-white/80 border-slate-100 backdrop-blur-3xl'}`}>
-                {/* Theme Toggle in Right Sidebar Header */}
-                <div className="absolute top-10 right-10">
-                    <button
-                        title="Switch Theme"
-                        onClick={() => setUiMode(prev => prev === 'light' ? 'dark' : 'light')}
-                        className={`p-3 rounded-2xl border transition-all ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 text-amber-400 hover:bg-slate-700' : 'bg-slate-50 border-slate-100 text-slate-600 hover:bg-slate-100'}`}
-                    >
-                        {uiMode === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                    </button>
-                </div>
 
                 <nav className={`flex px-6 pt-10 pb-4 gap-2 overflow-x-auto no-scrollbar`}>
                     {[
@@ -621,6 +626,7 @@ export default function Home() {
                     ].map((t) => (
                         <button
                             key={t.id}
+                            title={`Switch to ${t.label} tab`}
                             onClick={() => setActiveTab(t.id as Tab)}
                             className={`flex items-center gap-2.5 px-5 py-3.5 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all whitespace-nowrap ${activeTab === t.id ? 'bg-slate-900 text-white shadow-xl shadow-slate-200 scale-105' : `hover:bg-slate-50 ${uiMode === 'dark' ? 'text-slate-500 hover:bg-slate-800' : 'text-slate-400'}`}`}
                         >
@@ -713,6 +719,7 @@ export default function Home() {
                                             >
                                                 <div className="flex justify-between items-center w-full">
                                                     <button
+                                                        title={`Select ${slice.label} arc`}
                                                         onClick={() => setSelectedNodeId(`arc-${slice.sliceId}`)}
                                                         className="flex items-center gap-3 flex-1 text-left"
                                                     >
@@ -750,6 +757,7 @@ export default function Home() {
                                     {JSON.stringify({ config: geometryConfig, overrides: overrides }, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2)}
                                 </div>
                                 <button
+                                    title="Copy Layer 1 JSON"
                                     onClick={() => navigator.clipboard.writeText(JSON.stringify({ config: geometryConfig, overrides: overrides }, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2))}
                                     className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                 >
@@ -782,6 +790,7 @@ export default function Home() {
                                     ].map((item) => (
                                         <button
                                             key={item.type}
+                                            title={`Create ${item.label} entity`}
                                             onClick={() => createAnnotation(item.type as any)}
                                             className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 hover:bg-slate-800 hover:border-indigo-500/50' : 'bg-white border-slate-100 hover:border-indigo-200 hover:bg-indigo-50'} group`}
                                         >
@@ -907,6 +916,7 @@ export default function Home() {
                                                             {(['centroid', 'edge', 'outside'] as const).map(mode => (
                                                                 <button
                                                                     key={mode}
+                                                                    title={`Set anchor to ${mode}`}
                                                                     onClick={() => updateLabelOverride(selectedNodeId!, { anchorMode: mode })}
                                                                     className={`py-2 rounded-xl border text-[9px] font-black uppercase tracking-widest transition-all ${overrides.labels.get(selectedNodeId!)?.anchorMode === mode || (!overrides.labels.get(selectedNodeId!)?.anchorMode && geometryConfig.labelAnchorMode === mode) ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
                                                                 >
@@ -963,6 +973,7 @@ export default function Home() {
                                                                 {(['400', '500', '600', '700'] as const).map(weight => (
                                                                     <button
                                                                         key={weight}
+                                                                        title={`Set font weight to ${weight}`}
                                                                         onClick={() => updateNodeStyle(selectedNodeId!, { fontWeight: weight })}
                                                                         className={`py-2 rounded-xl border text-[9px] font-black transition-all ${String(currentNodeStyle?.fontWeight || '500') === weight ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
                                                                     >
@@ -1019,6 +1030,7 @@ export default function Home() {
                                                             {(['400', '500', '600', '700'] as const).map(weight => (
                                                                 <button
                                                                     key={weight}
+                                                                    title={`Set font weight to ${weight}`}
                                                                     onClick={() => updateNodeStyle(selectedNodeId!, { fontWeight: weight })}
                                                                     className={`py-2 rounded-xl border text-[9px] font-black transition-all ${String(currentNodeStyle?.fontWeight || '500') === weight ? 'bg-emerald-600 border-emerald-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-emerald-200'}`}
                                                                 >
@@ -1031,16 +1043,73 @@ export default function Home() {
                                             )}
 
                                             {currentNode?.type === NodeType.TEXT && (
-                                                <div className="pt-6 border-t border-slate-100 dark:border-slate-700 space-y-4">
-                                                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block px-1">Text Content</label>
-                                                    <input
-                                                        title="Annotation Text"
-                                                        type="text"
-                                                        value={overrides.annotations.get(selectedNodeId!)?.text || ''}
-                                                        onChange={(e) => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, text: e.target.value })}
-                                                        placeholder="Enter text..."
-                                                        className={`w-full border rounded-xl px-4 py-3 text-xs font-black focus:ring-1 focus:ring-indigo-200 outline-none transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
-                                                    />
+                                                <div className="pt-6 border-t border-slate-100 dark:border-slate-700 space-y-6">
+                                                    <div className="space-y-4">
+                                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block px-1">Text Content</label>
+                                                        <input
+                                                            title="Annotation Text"
+                                                            type="text"
+                                                            value={overrides.annotations.get(selectedNodeId!)?.text || ''}
+                                                            onChange={(e) => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, text: e.target.value })}
+                                                            placeholder="Enter text..."
+                                                            className={`w-full border rounded-xl px-4 py-3 text-xs font-black focus:ring-1 focus:ring-indigo-200 outline-none transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                        />
+                                                    </div>
+
+                                                    {/* Typography Styling for Text Annotations */}
+                                                    <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                                                        <h4 className="text-[10px] font-black text-indigo-500 uppercase tracking-widest px-1">Typography</h4>
+
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            <div className="space-y-2">
+                                                                <label className="text-[9px] font-black text-slate-400 uppercase px-1">Font Color</label>
+                                                                <div className="flex items-center gap-2">
+                                                                    <input
+                                                                        title="Font Color"
+                                                                        type="color"
+                                                                        value={currentNodeStyle?.fontColor || theme.defaultTypography.fontColor || '#1e293b'}
+                                                                        onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
+                                                                        className="w-10 h-10 rounded-xl border-2 border-slate-200 cursor-pointer"
+                                                                    />
+                                                                    <input
+                                                                        title="Font Color Hex"
+                                                                        type="text"
+                                                                        value={currentNodeStyle?.fontColor || theme.defaultTypography.fontColor || '#1e293b'}
+                                                                        onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
+                                                                        className={`flex-1 border rounded-xl px-3 py-2 text-xs font-mono font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="space-y-2">
+                                                                <label className="text-[9px] font-black text-slate-400 uppercase px-1">Font Size</label>
+                                                                <input
+                                                                    title="Font Size"
+                                                                    type="number"
+                                                                    min="8"
+                                                                    max="72"
+                                                                    value={currentNodeStyle?.fontSize || theme.defaultTypography.fontSize || 14}
+                                                                    onChange={(e) => updateNodeStyle(selectedNodeId!, { fontSize: Number(e.target.value) })}
+                                                                    className={`w-full border rounded-xl px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="space-y-2">
+                                                            <label className="text-[9px] font-black text-slate-400 uppercase px-1">Font Weight</label>
+                                                            <div className="grid grid-cols-4 gap-2">
+                                                                {(['400', '500', '600', '700'] as const).map(weight => (
+                                                                    <button
+                                                                        key={weight}
+                                                                        title={`Set font weight to ${weight}`}
+                                                                        onClick={() => updateNodeStyle(selectedNodeId!, { fontWeight: weight })}
+                                                                        className={`py-2 rounded-xl border text-[9px] font-black transition-all ${String(currentNodeStyle?.fontWeight || '500') === weight ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
+                                                                    >
+                                                                        {weight === '400' ? 'Normal' : weight === '500' ? 'Medium' : weight === '600' ? 'Semi' : 'Bold'}
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )}
 
@@ -1087,8 +1156,9 @@ export default function Home() {
                                                         {['Coffee', 'Star', 'Activity', 'Box', 'Heart', 'Zap', 'Target', 'Smile', 'Sun', 'Moon', 'Shield', 'Clock'].map(icon => (
                                                             <button
                                                                 key={icon}
+                                                                title={`Set icon to ${icon}`}
                                                                 onClick={() => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, iconName: icon })}
-                                                                className={`p-3 rounded-xl border flex items-center justify-center transition-all ${overrides.annotations.get(selectedNodeId!)?.iconName === icon ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-400 border-slate-100 dark:border-slate-700'}`}
+                                                                className={`p-2 rounded-lg border transition-all ${overrides.annotations.get(selectedNodeId!)?.iconName === icon ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
                                                             >
                                                                 {React.createElement((LucideIcons as any)[icon], { size: 16 })}
                                                             </button>
@@ -1144,11 +1214,12 @@ export default function Home() {
                                                 <div className="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-4">
                                                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block px-1">Actions</label>
                                                     <button
+                                                        title="Delete Selected Entity"
                                                         onClick={() => {
                                                             removeAnnotation(selectedNodeId!);
                                                             setSelectedNodeId(null);
                                                         }}
-                                                        className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl border border-rose-100 bg-rose-50 text-rose-600 transition-all font-bold text-xs hover:bg-rose-100 dark:bg-rose-950/20 dark:border-rose-900/30 dark:text-rose-400"
+                                                        className="w-full flex items-center justify-center gap-2 py-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-100 transition-colors"
                                                     >
                                                         <Trash2 size={14} />
                                                         Delete Node
@@ -1183,6 +1254,7 @@ export default function Home() {
                                     {JSON.stringify(sceneGraph, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2)}
                                 </div>
                                 <button
+                                    title="Copy Layer 2 JSON"
                                     onClick={() => navigator.clipboard.writeText(JSON.stringify(sceneGraph, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2))}
                                     className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                 >
@@ -1196,7 +1268,7 @@ export default function Home() {
                         <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500">
                             <header>
                                 <h2 className="text-xs font-black text-rose-500 uppercase tracking-[0.3em] mb-1">Layer 3</h2>
-                                <h3 className="text-2xl font-black tracking-tight text-slate-900">Visual Designer</h3>
+                                <h3 className={`text-2xl font-black tracking-tight transition-colors ${uiMode === 'dark' ? 'text-white' : 'text-slate-900'}`}>Visual Designer</h3>
                             </header>
 
                             <section className="space-y-4">
@@ -1221,25 +1293,6 @@ export default function Home() {
                                             />
                                         </div>
                                     </div>
-
-                                    <div className={`h-px w-full ${uiMode === 'dark' ? 'bg-slate-700' : 'bg-rose-50'}`}></div>
-
-                                    <div className="flex items-center justify-between">
-                                        <div className="space-y-1">
-                                            <label className={`text-[10px] font-black uppercase ${uiMode === 'dark' ? 'text-rose-300' : 'text-rose-900'}`}>Container Color</label>
-                                            <p className="text-[9px] font-bold text-rose-300">Set the chart area background</p>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <div className={`text-[10px] font-mono font-black px-2 py-1 rounded-lg uppercase ${uiMode === 'dark' ? 'text-rose-400 bg-rose-950/30' : 'text-rose-500 bg-rose-50'}`}>{theme.containerColor}</div>
-                                            <input
-                                                title="Container Color"
-                                                type="text"
-                                                value={theme.containerColor}
-                                                onChange={(e) => setTheme(prev => ({ ...prev, containerColor: e.target.value }))}
-                                                className={`text-[10px] font-mono font-black p-2 border rounded-xl w-32 outline-none focus:ring-1 focus:ring-rose-500 transition-colors ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
-                                            />
-                                        </div>
-                                    </div>
                                 </div>
                             </section>
 
@@ -1256,218 +1309,157 @@ export default function Home() {
                                             <div className="space-y-6">
                                                 <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl w-full">
                                                     <button
+                                                        title="Convert to Solid Color"
                                                         onClick={() => {
                                                             const currentFill = typeof currentNodeStyle?.fill === 'string' ? currentNodeStyle.fill : '#6366f1';
-                                                            updateNodeStyle(selectedNodeId, { fill: currentFill });
+                                                            updateNodeStyle(selectedNodeId!, { fill: currentFill });
                                                         }}
-                                                        className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${typeof currentNodeStyle?.fill === 'string' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-400'}`}
+                                                        className={`flex-1 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${typeof currentNodeStyle?.fill === 'string' ? 'bg-indigo-600 text-white shadow-lg' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
                                                     >
                                                         Solid
                                                     </button>
                                                     <button
                                                         onClick={() => {
                                                             const currentFill = typeof currentNodeStyle?.fill === 'string' ? currentNodeStyle.fill : '#6366f1';
-                                                            updateNodeStyle(selectedNodeId, {
+                                                            updateNodeStyle(selectedNodeId!, {
                                                                 fill: {
                                                                     type: 'linear',
-                                                                    angle: 45,
                                                                     stops: [
                                                                         { offset: 0, color: currentFill },
-                                                                        { offset: 1, color: '#6366f1' }
+                                                                        { offset: 1, color: '#4f46e5' }
                                                                     ]
                                                                 }
                                                             });
                                                         }}
-                                                        className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${typeof currentNodeStyle?.fill !== 'string' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-400'}`}
+                                                        className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${typeof currentNodeStyle?.fill === 'object' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-400'}`}
                                                     >
                                                         Gradient
                                                     </button>
                                                 </div>
 
-                                                {typeof currentNodeStyle?.fill === 'string' ? (
+                                                {typeof currentNodeStyle?.fill !== 'string' && (
                                                     <div className="space-y-4">
-                                                        <label className="text-[10px] font-black text-rose-400 dark:text-rose-300 uppercase tracking-widest block px-1">Fill Color</label>
-                                                        <div className="flex items-center gap-6">
-                                                            <input
-                                                                title="Fill Color"
-                                                                type="color"
-                                                                value={currentNodeStyle.fill}
-                                                                onChange={(e) => updateNodeStyle(selectedNodeId, { fill: e.target.value })}
-                                                                className="w-20 h-20 rounded-[2rem] border-none p-0 bg-transparent cursor-pointer hover:scale-105 transition-transform"
-                                                            />
-                                                            <div className="flex-1 space-y-1">
-                                                                <div className="text-[14px] font-mono font-black text-rose-900 dark:text-rose-100 uppercase">{currentNodeStyle.fill}</div>
-                                                                <div className="text-[10px] font-bold text-rose-300 uppercase tracking-tighter">Primary Swatch</div>
+                                                        <label className="text-[10px] font-black text-rose-400 dark:text-rose-300 uppercase tracking-widest block px-1">Gradient Stops</label>
+                                                        {(currentNodeStyle?.fill as any)?.stops?.map((stop: any, idx: number) => (
+                                                            <div key={idx} className="flex items-center gap-4 bg-white/50 dark:bg-slate-900/50 p-3 rounded-2xl border border-rose-100/50 dark:border-slate-800">
+                                                                <input
+                                                                    title={`Stop ${idx} Color`}
+                                                                    type="color"
+                                                                    value={stop.color}
+                                                                    onChange={(e) => {
+                                                                        const currentFill = currentNodeStyle?.fill as any;
+                                                                        const newStops = [...currentFill.stops];
+                                                                        newStops[idx] = { ...newStops[idx], color: e.target.value };
+                                                                        updateNodeStyle(selectedNodeId!, { fill: { ...currentFill, stops: newStops } });
+                                                                    }}
+                                                                    className="w-8 h-8 rounded-lg cursor-pointer"
+                                                                />
+                                                                <input
+                                                                    title={`Stop ${idx} Offset`}
+                                                                    type="range" min="0" max="1" step="0.1"
+                                                                    value={stop.offset}
+                                                                    onChange={(e) => {
+                                                                        const currentFill = currentNodeStyle?.fill as any;
+                                                                        const newStops = [...currentFill.stops];
+                                                                        newStops[idx] = { ...newStops[idx], offset: Number(e.target.value) };
+                                                                        updateNodeStyle(selectedNodeId!, { fill: { ...currentFill, stops: newStops } });
+                                                                    }}
+                                                                    className="flex-1 h-1 appearance-none bg-rose-200 dark:bg-rose-900/30 rounded-full accent-rose-500"
+                                                                />
                                                             </div>
-                                                        </div>
+                                                        ))}
                                                     </div>
-                                                ) : (
-                                                    <div className="space-y-6">
-                                                        <div className="grid grid-cols-2 gap-4">
-                                                            <div className="space-y-3">
-                                                                <div className="flex justify-between items-center px-1">
-                                                                    <label className="text-[10px] font-black text-rose-400 dark:text-rose-300 uppercase tracking-widest block">Start Stop</label>
-                                                                    <span className="text-[9px] font-mono font-black text-rose-400">{Math.round((currentNodeStyle?.fill.stops[0].offset || 0) * 100)}%</span>
-                                                                </div>
-                                                                <input
-                                                                    title="Start Color"
-                                                                    type="color"
-                                                                    value={currentNodeStyle?.fill.stops[0].color}
-                                                                    onChange={(e) => {
-                                                                        const grad = { ...(currentNodeStyle?.fill as any) };
-                                                                        grad.stops[0].color = e.target.value;
-                                                                        updateNodeStyle(selectedNodeId, { fill: grad });
-                                                                    }}
-                                                                    className="w-full h-8 rounded-lg border-none p-0 bg-transparent cursor-pointer"
-                                                                />
-                                                                <input
-                                                                    title="Start Offset"
-                                                                    type="range" min="0" max="1" step="0.01"
-                                                                    value={currentNodeStyle?.fill.stops[0].offset || 0}
-                                                                    onChange={(e) => {
-                                                                        const grad = { ...(currentNodeStyle?.fill as any) };
-                                                                        grad.stops[0].offset = Number(e.target.value);
-                                                                        updateNodeStyle(selectedNodeId, { fill: grad });
-                                                                    }}
-                                                                    className="w-full h-1 appearance-none rounded-full accent-rose-500 bg-rose-100"
-                                                                />
-                                                            </div>
-                                                            <div className="space-y-3">
-                                                                <div className="flex justify-between items-center px-1">
-                                                                    <label className="text-[10px] font-black text-rose-400 dark:text-rose-300 uppercase tracking-widest block">End Stop</label>
-                                                                    <span className="text-[9px] font-mono font-black text-rose-400">{Math.round((currentNodeStyle?.fill.stops[1].offset || 0) * 100)}%</span>
-                                                                </div>
-                                                                <input
-                                                                    title="End Color"
-                                                                    type="color"
-                                                                    value={currentNodeStyle?.fill.stops[1].color}
-                                                                    onChange={(e) => {
-                                                                        const grad = { ...(currentNodeStyle?.fill as any) };
-                                                                        grad.stops[1].color = e.target.value;
-                                                                        updateNodeStyle(selectedNodeId, { fill: grad });
-                                                                    }}
-                                                                    className="w-full h-8 rounded-lg border-none p-0 bg-transparent cursor-pointer"
-                                                                />
-                                                                <input
-                                                                    title="End Offset"
-                                                                    type="range" min="0" max="1" step="0.01"
-                                                                    value={currentNodeStyle?.fill.stops[1].offset || 0}
-                                                                    onChange={(e) => {
-                                                                        const grad = { ...(currentNodeStyle?.fill as any) };
-                                                                        grad.stops[1].offset = Number(e.target.value);
-                                                                        updateNodeStyle(selectedNodeId, { fill: grad });
-                                                                    }}
-                                                                    className="w-full h-1 appearance-none rounded-full accent-rose-500 bg-rose-100"
-                                                                />
-                                                            </div>
-                                                        </div>
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-6 pt-6 border-t border-rose-100 dark:border-slate-700">
+                                                <div className="space-y-4">
+                                                    <label className="text-[10px] font-black text-rose-400 dark:text-rose-300 uppercase tracking-widest block px-1">Opacity & Transparency</label>
+                                                    <div className="flex gap-4 items-center">
+                                                        <input
+                                                            title="Fill Opacity"
+                                                            type="range" min="0" max="1" step="0.01" value={currentNodeStyle?.fillOpacity ?? 1}
+                                                            onChange={(e) => updateNodeStyle(selectedNodeId!, { fillOpacity: Number(e.target.value) })}
+                                                            className={`flex-1 h-1.5 appearance-none rounded-full accent-rose-900 cursor-pointer ${uiMode === 'dark' ? 'bg-rose-950/30' : 'bg-rose-200'}`}
+                                                        />
+                                                        <span className="text-[10px] font-black text-rose-900 w-8">{Math.round((currentNodeStyle?.fillOpacity ?? 1) * 100)}%</span>
+                                                    </div>
+                                                </div>
+
+                                                {(currentNode?.type === NodeType.LABEL || currentNode?.type === NodeType.PERCENTAGE_LABEL) && (
+                                                    <div className="pt-6 border-t border-rose-100 space-y-6">
                                                         <div className="space-y-4">
-                                                            <div className="flex justify-between items-end px-1">
-                                                                <label className="text-[10px] font-black text-rose-400 dark:text-rose-300 uppercase tracking-widest">Gradient Angle</label>
-                                                                <span className="text-[10px] font-mono font-black text-rose-500">{currentNodeStyle?.fill.angle ?? 0}°</span>
+                                                            <label className="text-[10px] font-black text-rose-400 uppercase tracking-widest block px-1">Font Styling</label>
+                                                            <div className="space-y-6">
+                                                                <div className="space-y-2">
+                                                                    <div className="flex justify-between items-center text-[9px] font-black text-rose-300 uppercase">
+                                                                        <span>Font Size</span>
+                                                                        <span>{currentNodeStyle?.fontSize ?? 14}px</span>
+                                                                    </div>
+                                                                    <input
+                                                                        title="Font Size"
+                                                                        type="range" min="8" max="48" step="1" value={currentNodeStyle?.fontSize ?? 14}
+                                                                        onChange={(e) => updateNodeStyle(selectedNodeId!, { fontSize: Number(e.target.value) })}
+                                                                        className={`w-full h-1.5 appearance-none rounded-full accent-rose-900 cursor-pointer ${uiMode === 'dark' ? 'bg-rose-950/30' : 'bg-rose-200'}`}
+                                                                    />
+                                                                </div>
+                                                                <div className="space-y-2">
+                                                                    <div className="flex justify-between items-center text-[9px] font-black text-rose-300 uppercase">
+                                                                        <span>Font Weight</span>
+                                                                        <span>{currentNodeStyle?.fontWeight ?? 500}</span>
+                                                                    </div>
+                                                                    <select
+                                                                        title="Font Weight"
+                                                                        value={currentNodeStyle?.fontWeight ?? 500}
+                                                                        onChange={(e) => updateNodeStyle(selectedNodeId!, { fontWeight: Number(e.target.value) })}
+                                                                        className={`w-full text-[11px] font-black rounded-xl border px-3 py-2 ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-rose-100 text-rose-900'}`}
+                                                                    >
+                                                                        <option value={300}>Light (300)</option>
+                                                                        <option value={400}>Regular (400)</option>
+                                                                        <option value={500}>Medium (500)</option>
+                                                                        <option value={600}>Semi-Bold (600)</option>
+                                                                        <option value={700}>Bold (700)</option>
+                                                                        <option value={900}>Black (900)</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div className="space-y-2">
+                                                                    <div className="flex justify-between items-center text-[9px] font-black text-rose-300 uppercase">
+                                                                        <span>Font Color</span>
+                                                                        <span className="font-mono">{currentNodeStyle?.fontColor ?? '#000000'}</span>
+                                                                    </div>
+                                                                    <input
+                                                                        title="Font Color"
+                                                                        type="color"
+                                                                        value={currentNodeStyle?.fontColor ?? '#000000'}
+                                                                        onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
+                                                                        className="w-full h-10 rounded-xl border-none p-0 bg-transparent cursor-pointer"
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                            <input
-                                                                title="Gradient Angle"
-                                                                type="range" min="0" max="360"
-                                                                value={currentNodeStyle?.fill.angle ?? 0}
-                                                                onChange={(e) => {
-                                                                    const grad = { ...(currentNodeStyle?.fill as any) };
-                                                                    grad.angle = Number(e.target.value);
-                                                                    updateNodeStyle(selectedNodeId, { fill: grad });
-                                                                }}
-                                                                className="w-full h-1.5 bg-rose-100 dark:bg-rose-950/30 rounded-full accent-rose-500 appearance-none cursor-pointer"
-                                                            />
                                                         </div>
                                                     </div>
                                                 )}
 
-                                                <div className="space-y-4">
-                                                    <label className="text-[10px] font-black text-rose-400 dark:text-rose-300 uppercase tracking-widest block px-1">Stroke Design</label>
-                                                    <div className="flex items-center gap-6">
-                                                        <input
-                                                            title="Stroke Color"
-                                                            type="color"
-                                                            value={currentNodeStyle?.stroke || '#000000'}
-                                                            onChange={(e) => updateNodeStyle(selectedNodeId, { stroke: e.target.value })}
-                                                            className="w-16 h-16 rounded-[1.5rem] border-none p-0 bg-transparent cursor-pointer hover:scale-105 transition-transform"
-                                                        />
-                                                        <div className="flex-1 space-y-4">
-                                                            <div className="space-y-2">
-                                                                <div className="flex justify-between items-end">
-                                                                    <span className="text-[9px] font-black text-rose-400 uppercase tracking-widest">Thickness</span>
-                                                                    <span className="text-[10px] font-mono font-black text-rose-600">{currentNodeStyle?.strokeWidth ?? 0}px</span>
-                                                                </div>
-                                                                <input
-                                                                    title="Stroke Width"
-                                                                    type="range" min="0" max="10" step="0.5"
-                                                                    value={currentNodeStyle?.strokeWidth ?? 0}
-                                                                    onChange={(e) => updateNodeStyle(selectedNodeId, { strokeWidth: Number(e.target.value) })}
-                                                                    className="w-full h-1 bg-rose-100 dark:bg-rose-950/30 rounded-full accent-rose-500 appearance-none cursor-pointer"
-                                                                />
+                                                {(currentNode?.type === NodeType.CENTER_CONTENT || currentNodeStyle?.iconName) && (
+                                                    <div className="pt-6 border-t border-rose-100 space-y-6">
+                                                        <div className="space-y-4">
+                                                            <label className="text-[10px] font-black text-rose-400 uppercase tracking-widest block px-1">Icon Selection</label>
+                                                            <div className="grid grid-cols-4 gap-2">
+                                                                {['Coffee', 'Star', 'Activity', 'Box', 'Heart', 'Zap', 'Target', 'Smile'].map(icon => (
+                                                                    <button
+                                                                        key={icon}
+                                                                        title={`Set icon to ${icon}`}
+                                                                        onClick={() => updateNodeStyle(selectedNodeId!, { iconName: icon })}
+                                                                        className={`p-3 rounded-xl border flex items-center justify-center transition-all ${currentNodeStyle?.iconName === icon ? 'bg-rose-900 text-white' : 'bg-white text-rose-400 border-rose-100'}`}
+                                                                    >
+                                                                        {React.createElement((LucideIcons as any)[icon], { size: 16 })}
+                                                                    </button>
+                                                                ))}
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                )}
                                             </div>
-
-                                            <div className="space-y-4">
-                                                <label className="text-[10px] font-black text-rose-400 uppercase tracking-widest block px-1">Alpha / Opacity</label>
-                                                <div className="flex gap-4 items-center">
-                                                    <input
-                                                        title="Fill Opacity"
-                                                        type="range" min="0.1" max="1" step="0.1" value={currentNodeStyle?.fillOpacity ?? 1}
-                                                        onChange={(e) => updateNodeStyle(selectedNodeId, { fillOpacity: Number(e.target.value) })}
-                                                        className={`flex-1 h-1.5 appearance-none rounded-full accent-rose-900 cursor-pointer ${uiMode === 'dark' ? 'bg-rose-950/30' : 'bg-rose-200'}`}
-                                                    />
-                                                    <span className="text-[10px] font-black text-rose-900 w-8">{Math.round((currentNodeStyle?.fillOpacity ?? 1) * 100)}%</span>
-                                                </div>
-                                            </div>
-
-                                            {currentNode?.type === NodeType.LABEL && (
-                                                <div className="pt-6 border-t border-rose-100 space-y-6">
-                                                    <div className="space-y-4">
-                                                        <label className="text-[10px] font-black text-rose-400 uppercase tracking-widest block px-1">Label Text Size</label>
-                                                        <div className="flex gap-4 items-center">
-                                                            <input
-                                                                title="Font Size"
-                                                                type="range" min="8" max="32" step="1" value={currentNodeStyle?.fontSize ?? 14}
-                                                                onChange={(e) => updateNodeStyle(selectedNodeId, { fontSize: Number(e.target.value) })}
-                                                                className={`flex-1 h-1.5 appearance-none rounded-full accent-rose-900 cursor-pointer ${uiMode === 'dark' ? 'bg-rose-950/30' : 'bg-rose-200'}`}
-                                                            />
-                                                            <span className="text-[10px] font-black text-rose-900 w-8">{currentNodeStyle?.fontSize ?? 14}px</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="space-y-2">
-                                                        <label className="text-[10px] font-black text-rose-400 uppercase tracking-widest block px-1">Font Color</label>
-                                                        <input
-                                                            title="Font Color"
-                                                            type="color"
-                                                            value={currentNodeStyle?.fontColor ?? '#000000'}
-                                                            onChange={(e) => updateNodeStyle(selectedNodeId, { fontColor: e.target.value })}
-                                                            className="w-full h-8 rounded-lg border-none p-0 bg-transparent cursor-pointer"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {(currentNode?.type === NodeType.CENTER_CONTENT || currentNodeStyle?.iconName) && (
-                                                <div className="pt-6 border-t border-rose-100 space-y-6">
-                                                    <div className="space-y-4">
-                                                        <label className="text-[10px] font-black text-rose-400 uppercase tracking-widest block px-1">Icon Selection</label>
-                                                        <div className="grid grid-cols-4 gap-2">
-                                                            {['Coffee', 'Star', 'Activity', 'Box', 'Heart', 'Zap', 'Target', 'Smile'].map(icon => (
-                                                                <button
-                                                                    key={icon}
-                                                                    onClick={() => updateNodeStyle(selectedNodeId, { iconName: icon })}
-                                                                    className={`p-3 rounded-xl border flex items-center justify-center transition-all ${currentNodeStyle?.iconName === icon ? 'bg-rose-900 text-white' : 'bg-white text-rose-400 border-rose-100'}`}
-                                                                >
-                                                                    {React.createElement((LucideIcons as any)[icon], { size: 16 })}
-                                                                </button>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -1487,6 +1479,7 @@ export default function Home() {
                                     {JSON.stringify(theme, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2)}
                                 </div>
                                 <button
+                                    title="Copy Layer 3 JSON"
                                     onClick={() => navigator.clipboard.writeText(JSON.stringify(theme, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2))}
                                     className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                 >
@@ -1523,6 +1516,7 @@ export default function Home() {
                                             />
                                             <div className="flex gap-1">
                                                 <button
+                                                    title={`Use ${dim.label} as X mapping`}
                                                     onClick={() => updateMapping('x', dim.id)}
                                                     className={`px-2 py-1 text-[9px] font-black rounded transition-all ${rawData.meta?.mapping?.x === dim.id ? (uiMode === 'dark' ? 'bg-indigo-600 text-white' : 'bg-slate-900 text-white') : (uiMode === 'dark' ? 'bg-slate-900 text-slate-500' : 'bg-slate-50 text-slate-400')}`}
                                                 >
@@ -1555,6 +1549,7 @@ export default function Home() {
                                             />
                                             <div className="flex gap-1">
                                                 <button
+                                                    title={`Use ${msr.label} as Value mapping`}
                                                     onClick={() => updateMapping('value', msr.id)}
                                                     className={`px-2 py-1 text-[9px] font-black rounded transition-all ${rawData.meta?.mapping?.value === msr.id ? (uiMode === 'dark' ? 'bg-indigo-600 text-white' : 'bg-slate-900 text-white') : (uiMode === 'dark' ? 'bg-slate-900 text-slate-500' : 'bg-slate-50 text-slate-400')}`}
                                                 >
@@ -1611,6 +1606,7 @@ export default function Home() {
                                     {JSON.stringify(rawData, null, 2)}
                                 </div>
                                 <button
+                                    title="Copy Layer 0 JSON"
                                     onClick={() => navigator.clipboard.writeText(JSON.stringify(rawData, null, 2))}
                                     className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                 >
@@ -1633,7 +1629,7 @@ export default function Home() {
                         </div>
                     </div>
                 </footer>
-            </aside >
-        </div >
+            </aside>
+        </div>
     );
 }

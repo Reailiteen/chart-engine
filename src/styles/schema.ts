@@ -51,7 +51,6 @@ export const NodeStyleSchema = z.object({
 export const ChartThemeSchema = z.object({
     primaryColors: z.array(z.string()),
     backgroundColor: z.string(),
-    containerColor: z.string(),
     defaultTypography: TypographySchema,
     nodeOverrides: z.record(z.string(), NodeStyleSchema),
     nodeTransforms: z.record(z.string(), z.object({

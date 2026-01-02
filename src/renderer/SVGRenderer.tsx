@@ -331,7 +331,7 @@ export const SVGRenderer: React.FC<SVGRendererProps> = ({
                         x={x}
                         y={y}
                         transform={transform}
-                        fill={style?.fontColor}
+                        fill={style?.fontColor || (typeof style?.fill === 'string' ? style.fill : '#000')}
                         stroke={style?.stroke}
                         strokeWidth={style?.strokeWidth}
                         fontSize={style?.fontSize}

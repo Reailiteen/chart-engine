@@ -22,7 +22,6 @@ export const DEFAULT_PALETTE = [
 export const DEFAULT_THEME: ChartTheme = {
     primaryColors: DEFAULT_PALETTE,
     backgroundColor: '#FFFFFF',
-    containerColor: 'rgba(255, 255, 255, 0.4)',
     defaultTypography: {
         fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         fontSize: 14,
@@ -75,7 +74,7 @@ export function resolveNodeStyle(
     } else if (node.type === NodeType.IMAGE) {
         base.opacity = 1;
     } else if (node.type === NodeType.PERCENTAGE_LABEL) {
-        base.fill = theme.backgroundColor === '#FFFFFF' ? '#000000' : '#FFFFFF';
+        base.fontColor = theme.backgroundColor === '#FFFFFF' ? '#000000' : '#FFFFFF';
         base.fontSize = 12;
         base.fontWeight = 900;
         base.textAnchor = 'middle';

@@ -83,11 +83,12 @@ export interface NodeTransform {
 export interface ChartTheme {
     primaryColors: string[];
     backgroundColor: string;
-    containerColor: string;
     defaultTypography: {
         fontFamily: string;
         fontSize: number;
+        fontWeight?: string | number;
         fontColor: string;
+        textAnchor?: 'start' | 'middle' | 'end';
     };
     nodeOverrides: Map<string, NodeStyle>;
     nodeTransforms: Map<string, NodeTransform>;
