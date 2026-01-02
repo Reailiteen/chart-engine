@@ -62,9 +62,6 @@ export default function Home() {
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
     const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
     const [dragStart, setDragStart] = useState<{ x: number, y: number, offsetDx: number, offsetDy: number } | null>(null);
-    const dragTimer = React.useRef<NodeJS.Timeout | null>(null);
-    const potentialStartRef = React.useRef<{ x: number, y: number } | null>(null);
-    const [isHolding, setIsHolding] = useState(false);
 
     // Canvas Navigation State
     const [zoom, setZoom] = useState(1);
@@ -93,8 +90,6 @@ export default function Home() {
     } = useChartEngine(rawData);
 
     const handleNodeDragStart = useCallback((nodeId: string, e: React.PointerEvent) => {
-        if (dragTimer.current) clearTimeout(dragTimer.current);
-
         // Try to find if it's a label, annotation, or general node
         const labelOverride = overrides.labels.get(nodeId);
         const annotation = overrides.annotations.get(nodeId);
@@ -114,30 +109,12 @@ export default function Home() {
             initialDy = nodeTransform.y ?? 0;
         }
 
-        setIsHolding(true);
-        potentialStartRef.current = { x: e.clientX, y: e.clientY };
-        dragTimer.current = setTimeout(() => {
-            setDraggingNodeId(nodeId);
-            setDragStart({ x: e.clientX, y: e.clientY, offsetDx: initialDx, offsetDy: initialDy });
-            (e.target as Element).setPointerCapture(e.pointerId);
-            setIsHolding(false);
-            dragTimer.current = null;
-            potentialStartRef.current = null;
-        }, 1000);
+        setDraggingNodeId(nodeId);
+        setDragStart({ x: e.clientX, y: e.clientY, offsetDx: initialDx, offsetDy: initialDy });
+        (e.target as Element).setPointerCapture(e.pointerId);
     }, [overrides.labels, overrides.annotations, theme.nodeTransforms]);
 
     const handlePointerMove = useCallback((e: React.PointerEvent) => {
-        if (dragTimer.current && potentialStartRef.current) {
-            const dx = Math.abs(e.clientX - potentialStartRef.current.x);
-            const dy = Math.abs(e.clientY - potentialStartRef.current.y);
-            if (dx > 10 || dy > 10) {
-                clearTimeout(dragTimer.current);
-                dragTimer.current = null;
-                setIsHolding(false);
-                potentialStartRef.current = null;
-            }
-            return;
-        }
 
         if (isPanning && lastPanPoint.current) {
             const dx = e.clientX - lastPanPoint.current.x;
@@ -170,12 +147,6 @@ export default function Home() {
     }, [draggingNodeId, dragStart, zoom, updateLabelOverride, addAnnotation, updateNodeTransform, overrides.labels, overrides.annotations, isPanning]);
 
     const handlePointerUp = useCallback((e: React.PointerEvent) => {
-        if (dragTimer.current) {
-            clearTimeout(dragTimer.current);
-            dragTimer.current = null;
-        }
-        setIsHolding(false);
-
         if (draggingNodeId) {
             (e.target as Element).releasePointerCapture(e.pointerId);
             setDraggingNodeId(null);
@@ -447,7 +418,7 @@ export default function Home() {
                 onPointerDown={handleCanvasPointerDown}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
-                className={`absolute inset-0 z-10 cursor-grab active:cursor-grabbing touch-none transition-colors duration-700 ${isHolding ? 'cursor-wait' : ''}`}
+                className={`absolute inset-0 z-10 cursor-grab active:cursor-grabbing touch-none transition-colors duration-700`}
                 style={{ backgroundColor: theme.backgroundColor }}
             >
                 {/* Visual Depth Background */}
@@ -609,10 +580,7 @@ export default function Home() {
                             >
                                 <div className="flex justify-between items-start mb-2">
                                     <div className={`p-2.5 rounded-xl shadow-sm group-hover:bg-indigo-500 group-hover:text-white transition-colors ${uiMode === 'dark' ? 'bg-slate-700' : 'bg-white'}`}>
-                                        {preset.id === 'polar-core' && <Box size={16} />}
-                                        {preset.id === 'modern-ring' && <Circle size={16} />}
-                                        {preset.id === 'neon-burst' && <Zap size={16} />}
-                                        {preset.id === 'exploded-aurora' && <Target size={16} />}
+                                        <Box size={16} />
                                     </div>
                                     <ChevronRight size={14} className="text-slate-300 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all" />
                                 </div>
