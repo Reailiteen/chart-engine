@@ -102,7 +102,7 @@ export const SVGRenderer: React.FC<SVGRendererProps> = ({
                             onNodeClick?.(node.id);
                         }}
                         className={`transition-all duration-300 ease-in-out cursor-pointer hover:stroke-sky-400 hover:stroke-[3px] ${style?.className || ''}`}
-                        style={{ filter: shadowFilter }}
+                        filter={shadowFilter}
                     />
                 );
             }
@@ -344,10 +344,7 @@ export const SVGRenderer: React.FC<SVGRendererProps> = ({
                         }}
                         onPointerDown={(e) => onNodeDragStart?.(node.id, e)}
                         className={`cursor-pointer select-none pointer-events-auto ${style?.className || ''}`}
-                        style={{
-                            textShadow: uiMode === 'dark' ? '0 1px 4px rgba(0,0,0,0.5)' : 'none',
-                            opacity: node.visible === false ? 0 : 1
-                        }}
+                        opacity={node.visible === false ? 0 : 1}
                     >
                         {percentage}%
                     </text>

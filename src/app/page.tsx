@@ -358,7 +358,7 @@ export default function Home() {
                 case NodeType.LABEL: return <Type size={12} />;
                 case NodeType.LEADER_LINE: return <Move size={12} />;
                 case NodeType.CENTER_CONTAINER: return <Circle size={12} />;
-                case NodeType.CENTER_CONTENT: return <Sparkles size={12} />;
+                case NodeType.CENTER_CONTENT: return <Layers size={12} />;
                 default: return <Settings size={12} />;
             }
         };
@@ -368,21 +368,12 @@ export default function Home() {
                 {depth > 0 && (
                     <>
                         <div
-                            className="absolute border-l-2 border-slate-100"
-                            style={{
-                                left: (depth - 1) * 20 + 10,
-                                top: -4,
-                                height: 24,
-                                borderBottomLeftRadius: 8,
-                                borderBottomWidth: 2
-                            }}
+                            className="absolute border-l-2 border-slate-100 top-[-4px] h-[24px] rounded-bl-sm border-b-2"
+                            style={{ left: (depth - 1) * 20 + 10 }}
                         />
                         <div
-                            className="absolute border-t-2 border-slate-100 w-3"
-                            style={{
-                                left: (depth - 1) * 20 + 10,
-                                top: 18
-                            }}
+                            className="absolute border-t-2 border-slate-100 w-3 top-[18px]"
+                            style={{ left: (depth - 1) * 20 + 10 }}
                         />
                     </>
                 )}
@@ -390,10 +381,10 @@ export default function Home() {
                 <button
                     title={`Select node: ${node.id}`}
                     onClick={() => setSelectedNodeId(node.id)}
-                    className={`w-full flex items-center gap-3 p-3 rounded-2xl border transition-all text-left mb-1.5 group relative z-10 ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg active:scale-95' : `border-slate-50 text-slate-400 hover:border-indigo-100 hover:shadow-sm hover:translate-x-1 ${uiMode === 'dark' ? 'bg-slate-800/40 border-slate-700' : 'bg-white'}`}`}
+                    className={`w-full flex items-center gap-3 p-3 rounded-sm border transition-all text-left mb-1.5 group relative z-10 ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white shadow-none active:scale-95' : `border-slate-50 text-slate-400 hover:border-indigo-100 hover:shadow-none hover:translate-x-1 ${uiMode === 'dark' ? 'bg-slate-800/40 border-slate-700' : 'bg-white'}`}`}
                     style={{ marginLeft: depth * 20 }}
                 >
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${isSelected ? 'text-white' : 'text-indigo-500 group-hover:bg-indigo-50'}`}>
+                    <div className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors ${isSelected ? 'text-white' : 'text-indigo-500 group-hover:bg-indigo-50'}`}>
                         {getNodeIcon(node.type)}
                     </div>
                     <div className="flex-1 overflow-hidden">
@@ -425,13 +416,13 @@ export default function Home() {
             >
                 {/* Visual Depth Background */}
                 <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-                    <div className={`absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full blur-[120px] ${uiMode === 'dark' ? 'bg-blue-900' : 'bg-blue-100'}`}></div>
-                    <div className={`absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full blur-[120px] ${uiMode === 'dark' ? 'bg-purple-900' : 'bg-purple-100'}`}></div>
+                    <div className={`absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full blur-[20px] ${uiMode === 'dark' ? 'bg-blue-900' : 'bg-blue-100'}`}></div>
+                    <div className={`absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full blur-[20px] ${uiMode === 'dark' ? 'bg-purple-900' : 'bg-purple-100'}`}></div>
                 </div>
 
                 {/* Status Indicators Layer */}
                 <div className={`absolute top-8 left-12 flex gap-4 animate-in slide-in-from-top-4 duration-1000 z-50 transition-all ${sidebarsOpen.left ? 'translate-x-72 opacity-0' : 'translate-x-0'}`}>
-                    <div className={`flex items-center gap-3 px-5 py-2.5 backdrop-blur-md rounded-2xl border shadow-sm transition-all hover:shadow-md cursor-default group ${uiMode === 'dark' ? 'bg-slate-800/70 border-slate-700' : 'bg-white/70 border-white'}`}>
+                    <div className={`flex items-center gap-3 px-5 py-2.5 rounded-sm border shadow-none transition-all hover:shadow-none cursor-default group ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-white border-white'}`}>
                         <Activity size={16} className="text-emerald-500 animate-pulse" />
                         <span className={`text-[11px] font-bold tracking-tight ${uiMode === 'dark' ? 'text-slate-300' : 'text-slate-500'}`}>SYSTEM ONLINE</span>
                     </div>
@@ -439,16 +430,12 @@ export default function Home() {
 
                 {/* Canvas Container */}
                 <div
-                    className="absolute origin-center transition-transform duration-75 ease-out"
+                    className="absolute origin-center transition-transform duration-75 ease-out left-1/2 top-1/2 w-0 h-0"
                     style={{
                         transform: `translate(${canvasOffset.x}px, ${canvasOffset.y}px) scale(${zoom})`,
-                        left: '50%',
-                        top: '50%',
-                        width: '0',
-                        height: '0'
                     }}
                 >
-                    <div className="flex items-center justify-center" style={{ transform: 'translate(-50%, -50%)' }}>
+                    <div className="flex items-center justify-center -translate-x-1/2 -translate-y-1/2">
                         <SVGRenderer
                             scene={sceneGraph}
                             geometry={geometryState}
@@ -463,11 +450,11 @@ export default function Home() {
                 </div>
 
                 {/* Canvas Controls Overlay */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 backdrop-blur-xl rounded-2xl border border-white/20 bg-slate-900/40 shadow-2xl z-50">
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 backdrop-blur-sm rounded-sm border border-white/20 bg-slate-900/40 shadow-none z-50">
                     <button
                         title="Zoom Out"
                         onClick={() => setZoom(prev => Math.max(prev / 1.1, 0.1))}
-                        className="p-2.5 rounded-xl hover:bg-white/10 text-white/60 hover:text-white transition-all"
+                        className="p-2.5 rounded-md hover:bg-white/10 text-white/60 hover:text-white transition-all"
                     >
                         -
                     </button>
@@ -477,7 +464,7 @@ export default function Home() {
                     <button
                         title="Zoom In"
                         onClick={() => setZoom(prev => Math.min(prev * 1.1, 10))}
-                        className="p-2.5 rounded-xl hover:bg-white/10 text-white/60 hover:text-white transition-all"
+                        className="p-2.5 rounded-md hover:bg-white/10 text-white/60 hover:text-white transition-all"
                     >
                         +
                     </button>
@@ -488,7 +475,7 @@ export default function Home() {
                             setZoom(1);
                             setCanvasOffset({ x: 0, y: 0 });
                         }}
-                        className="p-2.5 rounded-xl hover:bg-white/10 text-white/60 hover:text-white transition-all"
+                        className="p-2.5 rounded-md hover:bg-white/10 text-white/60 hover:text-white transition-all"
                     >
                         <Focus size={16} />
                     </button>
@@ -499,7 +486,7 @@ export default function Home() {
             <button
                 title={sidebarsOpen.left ? 'Close left sidebar' : 'Open left sidebar'}
                 onClick={() => setSidebarsOpen(prev => ({ ...prev, left: !prev.left }))}
-                className={`absolute top-1/2 -translate-y-1/2 z-50 w-10 h-20 flex items-center justify-center backdrop-blur-xl border border-white/10 rounded-r-3xl transition-all duration-500 group ${sidebarsOpen.left ? 'left-[320px] bg-slate-900/80 text-white shadow-xl' : 'left-0 bg-white/10 text-slate-400 hover:bg-white/20'}`}
+                className={`absolute top-1/2 -translate-y-1/2 z-50 w-10 h-20 flex items-center justify-center backdrop-blur-sm border border-white/10 rounded-r-xl transition-all duration-500 group ${sidebarsOpen.left ? 'left-[320px] bg-slate-900 border-white/10' : 'left-0 bg-white/10 text-slate-400 hover:bg-white/20'}`}
             >
                 {sidebarsOpen.left ? <ChevronLeft size={20} className="transition-transform group-active:scale-95" /> : <ChevronRight size={20} className="transition-transform group-active:scale-95" />}
             </button>
@@ -507,19 +494,19 @@ export default function Home() {
             <button
                 title={sidebarsOpen.right ? 'Close right sidebar' : 'Open right sidebar'}
                 onClick={() => setSidebarsOpen(prev => ({ ...prev, right: !prev.right }))}
-                className={`absolute top-1/2 -translate-y-1/2 z-50 w-10 h-20 flex items-center justify-center backdrop-blur-xl border border-white/10 rounded-l-3xl transition-all duration-500 group ${sidebarsOpen.right ? 'right-[450px] bg-slate-900/80 text-white shadow-xl' : 'right-0 bg-white/10 text-slate-400 hover:bg-white/20'}`}
+                className={`absolute top-1/2 -translate-y-1/2 z-50 w-10 h-20 flex items-center justify-center backdrop-blur-sm border border-white/10 rounded-l-xl transition-all duration-500 group ${sidebarsOpen.right ? 'right-[450px] bg-slate-900 border-white/10' : 'right-0 bg-white/10 text-slate-400 hover:bg-white/20'}`}
             >
                 {sidebarsOpen.right ? <ChevronRight size={20} className="transition-transform group-active:scale-95" /> : <ChevronLeft size={20} className="transition-transform group-active:scale-95" />}
             </button>
 
 
             {/* Left Sidebar: Presets Library (Overlay) */}
-            <aside className={`absolute left-0 top-0 h-full w-[320px] border-r flex flex-col overflow-hidden shadow-2xl z-40 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${sidebarsOpen.left ? 'translate-x-0' : '-translate-x-full'} ${uiMode === 'dark' ? 'bg-slate-900/80 border-slate-800 backdrop-blur-3xl' : 'bg-white/80 border-slate-100 backdrop-blur-3xl'}`}>
+            <aside className={`absolute left-0 top-0 h-full w-[320px] border-r flex flex-col overflow-hidden shadow-none z-40 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${sidebarsOpen.left ? 'translate-x-0' : '-translate-x-full'} ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
                 <div className="p-10 pb-6 flex-1 overflow-y-auto no-scrollbar">
                     <div className="flex items-center justify-between mb-8">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg transform -rotate-6">
-                                <Sparkles size={20} className="text-white" />
+                            <div className="w-10 h-10 bg-slate-900 rounded-sm flex items-center justify-center shadow-none transform -rotate-6">
+                                <Layers size={20} className="text-white" />
                             </div>
                             <div>
                                 <h1 className={`text-xl font-black tracking-tight ${uiMode === 'dark' ? 'text-white' : 'text-slate-900'}`}>Presets</h1>
@@ -530,7 +517,7 @@ export default function Home() {
                         <button
                             title="Switch Theme"
                             onClick={() => setUiMode(prev => prev === 'light' ? 'dark' : 'light')}
-                            className={`p-2.5 rounded-2xl border transition-all ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 text-amber-400 hover:bg-slate-700' : 'bg-slate-50 border-slate-100 text-slate-600 hover:bg-slate-100'}`}
+                            className={`p-2.5 rounded-sm border transition-all ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 text-amber-400 hover:bg-slate-700' : 'bg-slate-50 border-slate-100 text-slate-600 hover:bg-slate-100'}`}
                         >
                             {uiMode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                         </button>
@@ -560,7 +547,7 @@ export default function Home() {
                                 navigator.clipboard.writeText(JSON.stringify(parsed, null, 2));
                                 alert('Board state (Deep Arch) copied to clipboard!');
                             }}
-                            className={`flex-1 p-2.5 rounded-xl border flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 text-sky-400 hover:bg-slate-700' : 'bg-white border-slate-100 text-sky-600 hover:bg-sky-50'}`}
+                            className={`flex-1 p-2.5 rounded-md border flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 text-sky-400 hover:bg-slate-700' : 'bg-white border-slate-100 text-sky-600 hover:bg-sky-50'}`}
                         >
                             <Database size={14} />
                             JSON
@@ -578,7 +565,7 @@ export default function Home() {
                                     }
                                 }
                             }}
-                            className={`flex-1 p-2.5 rounded-xl border flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 text-emerald-400 hover:bg-slate-700' : 'bg-white border-slate-100 text-emerald-600 hover:bg-emerald-50'}`}
+                            className={`flex-1 p-2.5 rounded-md border flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 text-emerald-400 hover:bg-slate-700' : 'bg-white border-slate-100 text-emerald-600 hover:bg-emerald-50'}`}
                         >
                             <Zap size={14} />
                             RESTORE
@@ -591,10 +578,10 @@ export default function Home() {
                                 key={preset.id}
                                 title={`Load preset: ${preset.label}`}
                                 onClick={() => loadPreset(preset)}
-                                className={`w-full group text-left p-5 rounded-[32px] border transition-all duration-300 transform hover:-translate-y-1 ${uiMode === 'dark' ? 'bg-slate-800/50 border-slate-700 hover:bg-slate-800 hover:border-indigo-500' : 'bg-slate-50 border-slate-100 hover:bg-white hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10'}`}
+                                className={`w-full group text-left p-5 rounded-md border transition-all duration-300 transform hover:-translate-y-1 ${uiMode === 'dark' ? 'bg-slate-800/50 border-slate-700 hover:bg-slate-800 hover:border-indigo-500' : 'bg-slate-50 border-slate-100 hover:bg-white hover:border-indigo-500 hover:shadow-none hover:shadow-indigo-500/10'}`}
                             >
                                 <div className="flex justify-between items-start mb-2">
-                                    <div className={`p-2.5 rounded-xl shadow-sm group-hover:bg-indigo-500 group-hover:text-white transition-colors ${uiMode === 'dark' ? 'bg-slate-700' : 'bg-white'}`}>
+                                    <div className={`p-2.5 rounded-md shadow-none group-hover:bg-indigo-500 group-hover:text-white transition-colors ${uiMode === 'dark' ? 'bg-slate-700' : 'bg-white'}`}>
                                         <Box size={16} />
                                     </div>
                                     <ChevronRight size={14} className="text-slate-300 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all" />
@@ -607,7 +594,7 @@ export default function Home() {
                 </div>
 
                 <div className={`mt-auto p-10 border-t ${uiMode === 'dark' ? 'border-slate-800' : 'border-slate-50'}`}>
-                    <div className={`p-6 rounded-[28px] border transition-colors ${uiMode === 'dark' ? 'bg-indigo-900/20 border-indigo-500/20' : 'bg-indigo-50 border-indigo-100/50'}`}>
+                    <div className={`p-6 rounded-sm border transition-colors ${uiMode === 'dark' ? 'bg-indigo-900/20 border-indigo-500/20' : 'bg-indigo-50 border-indigo-100/50'}`}>
                         <h4 className={`text-[10px] font-black uppercase tracking-widest mb-2 ${uiMode === 'dark' ? 'text-indigo-300' : 'text-indigo-900'}`}>Pro Tip</h4>
                         <p className={`text-[11px] font-bold leading-relaxed italic ${uiMode === 'dark' ? 'text-indigo-400' : 'text-indigo-400'}`}>"Presets apply deep configuration across all four architectural layers."</p>
                     </div>
@@ -615,7 +602,7 @@ export default function Home() {
             </aside>
 
             {/* Right Sidebar: Control System (Overlay) */}
-            <aside className={`absolute right-0 top-0 h-full w-[450px] border-l flex flex-col overflow-hidden shadow-2xl z-40 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${sidebarsOpen.right ? 'translate-x-0' : 'translate-x-full'} ${uiMode === 'dark' ? 'bg-slate-900/80 border-slate-800 backdrop-blur-3xl' : 'bg-white/80 border-slate-100 backdrop-blur-3xl'}`}>
+            <aside className={`absolute right-0 top-0 h-full w-[450px] border-l flex flex-col overflow-hidden shadow-none z-40 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${sidebarsOpen.right ? 'translate-x-0' : 'translate-x-full'} ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
 
                 <nav className={`flex px-6 pt-10 pb-4 gap-2 overflow-x-auto no-scrollbar`}>
                     {[
@@ -628,7 +615,7 @@ export default function Home() {
                             key={t.id}
                             title={`Switch to ${t.label} tab`}
                             onClick={() => setActiveTab(t.id as Tab)}
-                            className={`flex items-center gap-2.5 px-5 py-3.5 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all whitespace-nowrap ${activeTab === t.id ? 'bg-slate-900 text-white shadow-xl shadow-slate-200 scale-105' : `hover:bg-slate-50 ${uiMode === 'dark' ? 'text-slate-500 hover:bg-slate-800' : 'text-slate-400'}`}`}
+                            className={`flex items-center gap-2.5 px-5 py-3.5 rounded-sm font-black text-[11px] tracking-widest uppercase transition-all whitespace-nowrap ${activeTab === t.id ? 'bg-slate-900 text-white shadow-none scale-105' : `hover:bg-slate-50 ${uiMode === 'dark' ? 'text-slate-500 hover:bg-slate-800' : 'text-slate-400'}`}`}
                         >
                             <t.icon size={14} className={activeTab === t.id ? 'text-sky-400' : 'text-slate-300'} />
                             {t.label}
@@ -644,7 +631,7 @@ export default function Home() {
                                 <h3 className={`text-2xl font-black tracking-tight transition-colors ${uiMode === 'dark' ? 'text-white' : 'text-slate-900'}`}>Geometric Core</h3>
                             </header>
 
-                            <section className={`space-y-8 p-6 rounded-[32px] border shadow-sm transition-all duration-500 ${uiMode === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-white/40 border-white'}`}>
+                            <section className={`space-y-8 p-6 rounded-md border shadow-none transition-all duration-500 ${uiMode === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-white/40 border-white'}`}>
                                 <div className="space-y-6">
                                     <div className="group">
                                         <div className="flex justify-between mb-3 items-end">
@@ -652,7 +639,7 @@ export default function Home() {
                                                 <div className="w-1.5 h-1.5 rounded-full bg-slate-900"></div>
                                                 <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Base Radius</label>
                                             </div>
-                                            <span className="text-[10px] font-mono font-black text-sky-500 bg-sky-50 px-2 py-0.5 rounded-lg">{geometryConfig.outerRadius}px</span>
+                                            <span className="text-[10px] font-mono font-black text-sky-500 bg-sky-50 px-2 py-0.5 rounded-sm">{geometryConfig.outerRadius}px</span>
                                         </div>
                                         <input
                                             title="Outer Radius"
@@ -665,7 +652,7 @@ export default function Home() {
                                     <div className="group">
                                         <div className="flex justify-between mb-3 items-end">
                                             <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Hole Size (Donut)</label>
-                                            <span className="text-[10px] font-mono font-black text-sky-500 bg-sky-50 px-2 py-0.5 rounded-lg">{geometryConfig.innerRadius}px</span>
+                                            <span className="text-[10px] font-mono font-black text-sky-500 bg-sky-50 px-2 py-0.5 rounded-sm">{geometryConfig.innerRadius}px</span>
                                         </div>
                                         <input
                                             title="Inner Radius"
@@ -678,7 +665,7 @@ export default function Home() {
                                     <div className="group">
                                         <div className="flex justify-between mb-3 items-end">
                                             <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Slice Gap</label>
-                                            <span className="text-[10px] font-mono font-black text-sky-500 bg-sky-50 px-2 py-0.5 rounded-lg">{(geometryConfig.padAngle * 180 / Math.PI).toFixed(1)}°</span>
+                                            <span className="text-[10px] font-mono font-black text-sky-500 bg-sky-50 px-2 py-0.5 rounded-sm">{(geometryConfig.padAngle * 180 / Math.PI).toFixed(1)}°</span>
                                         </div>
                                         <input
                                             title="Pad Angle"
@@ -691,7 +678,7 @@ export default function Home() {
                                     <div className="group">
                                         <div className="flex justify-between mb-3 items-end">
                                             <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Label Distance</label>
-                                            <span className="text-[10px] font-mono font-black text-sky-500 bg-sky-50 px-2 py-0.5 rounded-lg">{geometryConfig.labelRadiusOffset}px</span>
+                                            <span className="text-[10px] font-mono font-black text-sky-500 bg-sky-50 px-2 py-0.5 rounded-sm">{geometryConfig.labelRadiusOffset}px</span>
                                         </div>
                                         <input
                                             title="Label Radius Offset"
@@ -715,7 +702,7 @@ export default function Home() {
                                         return (
                                             <div
                                                 key={slice.sliceId}
-                                                className={`flex flex-col gap-4 p-4 rounded-[32px] border transition-all duration-500 ${isSelected ? 'border-sky-500 bg-white dark:bg-slate-800 shadow-xl shadow-sky-100/50 scale-[1.02] relative z-10' : 'border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-slate-900/30 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-200 dark:hover:border-slate-700'}`}
+                                                className={`flex flex-col gap-4 p-4 rounded-md border transition-all duration-500 ${isSelected ? 'border-sky-500 bg-white dark:bg-slate-800 shadow-none scale-[1.02] relative z-10' : 'border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-slate-900/30 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-200 dark:hover:border-slate-700'}`}
                                             >
                                                 <div className="flex justify-between items-center w-full">
                                                     <button
@@ -723,7 +710,7 @@ export default function Home() {
                                                         onClick={() => setSelectedNodeId(`arc-${slice.sliceId}`)}
                                                         className="flex items-center gap-3 flex-1 text-left"
                                                     >
-                                                        <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: theme.primaryColors[i % theme.primaryColors.length] }}></div>
+                                                        <div className="w-3 h-3 rounded-full shadow-none" style={{ backgroundColor: theme.primaryColors[i % theme.primaryColors.length] }}></div>
                                                         <span className={`text-[11px] font-black truncate tracking-tight ${uiMode === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}>{slice.label}</span>
                                                     </button>
                                                     <span className="text-[10px] font-mono font-black text-slate-300">{slice.percentage.toFixed(0)}%</span>
@@ -753,13 +740,13 @@ export default function Home() {
                                     Technical Blueprint (L1)
                                     <div className="h-px flex-1 bg-slate-100"></div>
                                 </h3>
-                                <div className={`p-4 rounded-2xl font-mono text-[9px] overflow-x-auto whitespace-pre transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-950 text-sky-400 border border-slate-800' : 'bg-slate-50 text-sky-600 border border-slate-100'}`}>
+                                <div className={`p-4 rounded-sm font-mono text-[9px] overflow-x-auto whitespace-pre transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-950 text-sky-400 border border-slate-800' : 'bg-slate-50 text-sky-600 border border-slate-100'}`}>
                                     {JSON.stringify({ config: geometryConfig, overrides: overrides }, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2)}
                                 </div>
                                 <button
                                     title="Copy Layer 1 JSON"
                                     onClick={() => navigator.clipboard.writeText(JSON.stringify({ config: geometryConfig, overrides: overrides }, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2))}
-                                    className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                    className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                 >
                                     Copy Layer JSON
                                 </button>
@@ -792,9 +779,9 @@ export default function Home() {
                                             key={item.type}
                                             title={`Create ${item.label} entity`}
                                             onClick={() => createAnnotation(item.type as any)}
-                                            className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 hover:bg-slate-800 hover:border-indigo-500/50' : 'bg-white border-slate-100 hover:border-indigo-200 hover:bg-indigo-50'} group`}
+                                            className={`flex items-center gap-3 p-4 rounded-sm border transition-all text-left ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 hover:bg-slate-800 hover:border-indigo-500/50' : 'bg-white border-slate-100 hover:border-indigo-200 hover:bg-indigo-50'} group`}
                                         >
-                                            <div className={`p-2 rounded-xl transition-colors ${uiMode === 'dark' ? 'bg-slate-800 text-indigo-400 group-hover:bg-indigo-500/10' : 'bg-slate-50 text-indigo-500 group-hover:bg-white'}`}>
+                                            <div className={`p-2 rounded-md transition-colors ${uiMode === 'dark' ? 'bg-slate-800 text-indigo-400 group-hover:bg-indigo-500/10' : 'bg-slate-50 text-indigo-500 group-hover:bg-white'}`}>
                                                 <item.icon size={18} />
                                             </div>
                                             <div className="flex flex-col">
@@ -807,8 +794,8 @@ export default function Home() {
                             </section>
 
                             <section className="space-y-6">
-                                <div className="flex items-center gap-4 p-5 bg-indigo-50 rounded-3xl border border-indigo-100">
-                                    <div className="p-3 bg-white rounded-2xl shadow-sm"><Move size={20} className="text-indigo-500" /></div>
+                                <div className="flex items-center gap-4 p-5 bg-indigo-50 rounded-sm border border-indigo-100">
+                                    <div className="p-3 bg-white rounded-sm shadow-none"><Move size={20} className="text-indigo-500" /></div>
                                     <div>
                                         <h4 className="text-sm font-black text-indigo-900">Interactive Pivot</h4>
                                         <p className="text-[11px] font-bold text-indigo-400">Node Transformation overrides</p>
@@ -816,7 +803,7 @@ export default function Home() {
                                 </div>
 
                                 {selectedNodeId ? (
-                                    <div className={`space-y-8 p-6 rounded-[32px] border shadow-sm transition-all duration-500 ${uiMode === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-white/40 border-white'}`}>
+                                    <div className={`space-y-8 p-6 rounded-md border shadow-none transition-all duration-500 ${uiMode === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-white/40 border-white'}`}>
                                         <div className={`text-[10px] font-black uppercase tracking-widest mb-4 transition-colors ${uiMode === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Editing: {selectedNodeId}</div>
 
                                         <div className="space-y-6">
@@ -867,7 +854,7 @@ export default function Home() {
                                                             type="number"
                                                             value={Math.round(currentNodeTransform?.x ?? currentNode?.transform?.x ?? 0)}
                                                             onChange={(e) => updateNodeTransform(selectedNodeId, { x: Number(e.target.value) })}
-                                                            className={`w-20 border rounded-xl px-2 py-1.5 text-xs font-black text-center focus:ring-1 focus:ring-indigo-200 outline-none transition-colors ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                            className={`w-20 border rounded-md px-2 py-1.5 text-xs font-black text-center focus:ring-1 focus:ring-indigo-200 outline-none transition-colors ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                         />
                                                     </div>
                                                 </div>
@@ -890,7 +877,7 @@ export default function Home() {
                                                             type="number"
                                                             value={Math.round(currentNodeTransform?.y ?? currentNode?.transform?.y ?? 0)}
                                                             onChange={(e) => updateNodeTransform(selectedNodeId, { y: Number(e.target.value) })}
-                                                            className={`w-20 border rounded-xl px-2 py-1.5 text-xs font-black text-center focus:ring-1 focus:ring-indigo-200 outline-none transition-colors ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                            className={`w-20 border rounded-md px-2 py-1.5 text-xs font-black text-center focus:ring-1 focus:ring-indigo-200 outline-none transition-colors ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                         />
                                                     </div>
                                                 </div>
@@ -906,7 +893,7 @@ export default function Home() {
                                                             value={overrides.labels.get(selectedNodeId!)?.text || currentNode.dataId?.replace('slice-', '') || ''}
                                                             onChange={(e) => updateLabelOverride(selectedNodeId!, { text: e.target.value })}
                                                             placeholder="Enter custom label text..."
-                                                            className={`w-full border rounded-xl px-4 py-3 text-xs font-black focus:ring-1 focus:ring-indigo-200 outline-none transition-all placeholder:text-slate-500 ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                            className={`w-full border rounded-md px-4 py-3 text-xs font-black focus:ring-1 focus:ring-indigo-200 outline-none transition-all placeholder:text-slate-500 ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                         />
                                                     </div>
 
@@ -918,7 +905,7 @@ export default function Home() {
                                                                     key={mode}
                                                                     title={`Set anchor to ${mode}`}
                                                                     onClick={() => updateLabelOverride(selectedNodeId!, { anchorMode: mode })}
-                                                                    className={`py-2 rounded-xl border text-[9px] font-black uppercase tracking-widest transition-all ${overrides.labels.get(selectedNodeId!)?.anchorMode === mode || (!overrides.labels.get(selectedNodeId!)?.anchorMode && geometryConfig.labelAnchorMode === mode) ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
+                                                                    className={`py-2 rounded-md border text-[9px] font-black uppercase tracking-widest transition-all ${overrides.labels.get(selectedNodeId!)?.anchorMode === mode || (!overrides.labels.get(selectedNodeId!)?.anchorMode && geometryConfig.labelAnchorMode === mode) ? 'bg-indigo-600 border-indigo-600 text-white shadow-none' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
                                                                 >
                                                                     {mode}
                                                                 </button>
@@ -942,14 +929,14 @@ export default function Home() {
                                                                         type="color"
                                                                         value={currentNodeStyle?.fontColor || theme.defaultTypography.fontColor || '#1e293b'}
                                                                         onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
-                                                                        className="w-10 h-10 rounded-xl border-2 border-slate-200 cursor-pointer"
+                                                                        className="w-10 h-10 rounded-md border-2 border-slate-200 cursor-pointer"
                                                                     />
                                                                     <input
                                                                         title="Font Color Hex"
                                                                         type="text"
                                                                         value={currentNodeStyle?.fontColor || theme.defaultTypography.fontColor || '#1e293b'}
                                                                         onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
-                                                                        className={`flex-1 border rounded-xl px-3 py-2 text-xs font-mono font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                        className={`flex-1 border rounded-md px-3 py-2 text-xs font-mono font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                                     />
                                                                 </div>
                                                             </div>
@@ -962,7 +949,7 @@ export default function Home() {
                                                                     max="72"
                                                                     value={currentNodeStyle?.fontSize || theme.defaultTypography.fontSize || 14}
                                                                     onChange={(e) => updateNodeStyle(selectedNodeId!, { fontSize: Number(e.target.value) })}
-                                                                    className={`w-full border rounded-xl px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                    className={`w-full border rounded-md px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                                 />
                                                             </div>
                                                         </div>
@@ -975,7 +962,7 @@ export default function Home() {
                                                                         key={weight}
                                                                         title={`Set font weight to ${weight}`}
                                                                         onClick={() => updateNodeStyle(selectedNodeId!, { fontWeight: weight })}
-                                                                        className={`py-2 rounded-xl border text-[9px] font-black transition-all ${String(currentNodeStyle?.fontWeight || '500') === weight ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
+                                                                        className={`py-2 rounded-md border text-[9px] font-black transition-all ${String(currentNodeStyle?.fontWeight || '500') === weight ? 'bg-indigo-600 border-indigo-600 text-white shadow-none' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
                                                                     >
                                                                         {weight === '400' ? 'Normal' : weight === '500' ? 'Medium' : weight === '600' ? 'Semi' : 'Bold'}
                                                                     </button>
@@ -999,14 +986,14 @@ export default function Home() {
                                                                     type="color"
                                                                     value={currentNodeStyle?.fontColor || theme.defaultTypography.fontColor || '#1e293b'}
                                                                     onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
-                                                                    className="w-10 h-10 rounded-xl border-2 border-slate-200 cursor-pointer"
+                                                                    className="w-10 h-10 rounded-md border-2 border-slate-200 cursor-pointer"
                                                                 />
                                                                 <input
                                                                     title="Font Color Hex"
                                                                     type="text"
                                                                     value={currentNodeStyle?.fontColor || theme.defaultTypography.fontColor || '#1e293b'}
                                                                     onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
-                                                                    className={`flex-1 border rounded-xl px-3 py-2 text-xs font-mono font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                    className={`flex-1 border rounded-md px-3 py-2 text-xs font-mono font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                                 />
                                                             </div>
                                                         </div>
@@ -1019,7 +1006,7 @@ export default function Home() {
                                                                 max="72"
                                                                 value={currentNodeStyle?.fontSize || theme.defaultTypography.fontSize || 14}
                                                                 onChange={(e) => updateNodeStyle(selectedNodeId!, { fontSize: Number(e.target.value) })}
-                                                                className={`w-full border rounded-xl px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                className={`w-full border rounded-md px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                             />
                                                         </div>
                                                     </div>
@@ -1032,7 +1019,7 @@ export default function Home() {
                                                                     key={weight}
                                                                     title={`Set font weight to ${weight}`}
                                                                     onClick={() => updateNodeStyle(selectedNodeId!, { fontWeight: weight })}
-                                                                    className={`py-2 rounded-xl border text-[9px] font-black transition-all ${String(currentNodeStyle?.fontWeight || '500') === weight ? 'bg-emerald-600 border-emerald-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-emerald-200'}`}
+                                                                    className={`py-2 rounded-md border text-[9px] font-black transition-all ${String(currentNodeStyle?.fontWeight || '500') === weight ? 'bg-emerald-600 border-emerald-600 text-white shadow-none' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-emerald-200'}`}
                                                                 >
                                                                     {weight === '400' ? 'Normal' : weight === '500' ? 'Medium' : weight === '600' ? 'Semi' : 'Bold'}
                                                                 </button>
@@ -1052,7 +1039,7 @@ export default function Home() {
                                                             value={overrides.annotations.get(selectedNodeId!)?.text || ''}
                                                             onChange={(e) => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, text: e.target.value })}
                                                             placeholder="Enter text..."
-                                                            className={`w-full border rounded-xl px-4 py-3 text-xs font-black focus:ring-1 focus:ring-indigo-200 outline-none transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                            className={`w-full border rounded-md px-4 py-3 text-xs font-black focus:ring-1 focus:ring-indigo-200 outline-none transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                         />
                                                     </div>
 
@@ -1069,14 +1056,14 @@ export default function Home() {
                                                                         type="color"
                                                                         value={currentNodeStyle?.fontColor || theme.defaultTypography.fontColor || '#1e293b'}
                                                                         onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
-                                                                        className="w-10 h-10 rounded-xl border-2 border-slate-200 cursor-pointer"
+                                                                        className="w-10 h-10 rounded-md border-2 border-slate-200 cursor-pointer"
                                                                     />
                                                                     <input
                                                                         title="Font Color Hex"
                                                                         type="text"
                                                                         value={currentNodeStyle?.fontColor || theme.defaultTypography.fontColor || '#1e293b'}
                                                                         onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
-                                                                        className={`flex-1 border rounded-xl px-3 py-2 text-xs font-mono font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                        className={`flex-1 border rounded-md px-3 py-2 text-xs font-mono font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                                     />
                                                                 </div>
                                                             </div>
@@ -1089,7 +1076,7 @@ export default function Home() {
                                                                     max="72"
                                                                     value={currentNodeStyle?.fontSize || theme.defaultTypography.fontSize || 14}
                                                                     onChange={(e) => updateNodeStyle(selectedNodeId!, { fontSize: Number(e.target.value) })}
-                                                                    className={`w-full border rounded-xl px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                    className={`w-full border rounded-md px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                                 />
                                                             </div>
                                                         </div>
@@ -1102,7 +1089,7 @@ export default function Home() {
                                                                         key={weight}
                                                                         title={`Set font weight to ${weight}`}
                                                                         onClick={() => updateNodeStyle(selectedNodeId!, { fontWeight: weight })}
-                                                                        className={`py-2 rounded-xl border text-[9px] font-black transition-all ${String(currentNodeStyle?.fontWeight || '500') === weight ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
+                                                                        className={`py-2 rounded-md border text-[9px] font-black transition-all ${String(currentNodeStyle?.fontWeight || '500') === weight ? 'bg-indigo-600 border-indigo-600 text-white shadow-none' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
                                                                     >
                                                                         {weight === '400' ? 'Normal' : weight === '500' ? 'Medium' : weight === '600' ? 'Semi' : 'Bold'}
                                                                     </button>
@@ -1122,7 +1109,7 @@ export default function Home() {
                                                         value={overrides.annotations.get(selectedNodeId!)?.imageUrl || ''}
                                                         onChange={(e) => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, imageUrl: e.target.value })}
                                                         placeholder="https://example.com/image.png"
-                                                        className={`w-full border rounded-xl px-4 py-3 text-xs font-black focus:ring-1 focus:ring-indigo-200 outline-none transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                        className={`w-full border rounded-md px-4 py-3 text-xs font-black focus:ring-1 focus:ring-indigo-200 outline-none transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                     />
                                                     <div className="grid grid-cols-2 gap-4">
                                                         <div className="space-y-2">
@@ -1132,7 +1119,7 @@ export default function Home() {
                                                                 type="number"
                                                                 value={overrides.annotations.get(selectedNodeId!)?.width || 80}
                                                                 onChange={(e) => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, width: Number(e.target.value) })}
-                                                                className={`w-full border rounded-xl px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                className={`w-full border rounded-md px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                             />
                                                         </div>
                                                         <div className="space-y-2">
@@ -1142,7 +1129,7 @@ export default function Home() {
                                                                 type="number"
                                                                 value={overrides.annotations.get(selectedNodeId!)?.height || 80}
                                                                 onChange={(e) => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, height: Number(e.target.value) })}
-                                                                className={`w-full border rounded-xl px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                className={`w-full border rounded-md px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                             />
                                                         </div>
                                                     </div>
@@ -1158,7 +1145,7 @@ export default function Home() {
                                                                 key={icon}
                                                                 title={`Set icon to ${icon}`}
                                                                 onClick={() => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, iconName: icon })}
-                                                                className={`p-2 rounded-lg border transition-all ${overrides.annotations.get(selectedNodeId!)?.iconName === icon ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
+                                                                className={`p-2 rounded-sm border transition-all ${overrides.annotations.get(selectedNodeId!)?.iconName === icon ? 'bg-indigo-600 border-indigo-600 text-white shadow-none' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400 hover:border-indigo-200'}`}
                                                             >
                                                                 {React.createElement((LucideIcons as any)[icon], { size: 16 })}
                                                             </button>
@@ -1179,7 +1166,7 @@ export default function Home() {
                                                                     type="number"
                                                                     value={overrides.annotations.get(selectedNodeId!)?.radius || 30}
                                                                     onChange={(e) => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, radius: Number(e.target.value) })}
-                                                                    className={`w-full border rounded-xl px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                    className={`w-full border rounded-md px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                                 />
                                                             </div>
                                                         ) : (
@@ -1191,7 +1178,7 @@ export default function Home() {
                                                                         type="number"
                                                                         value={overrides.annotations.get(selectedNodeId!)?.width || 60}
                                                                         onChange={(e) => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, width: Number(e.target.value) })}
-                                                                        className={`w-full border rounded-xl px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                        className={`w-full border rounded-md px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                                     />
                                                                 </div>
                                                                 <div className="space-y-2">
@@ -1201,7 +1188,7 @@ export default function Home() {
                                                                         type="number"
                                                                         value={overrides.annotations.get(selectedNodeId!)?.height || 60}
                                                                         onChange={(e) => addAnnotation({ ...overrides.annotations.get(selectedNodeId!)!, height: Number(e.target.value) })}
-                                                                        className={`w-full border rounded-xl px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
+                                                                        className={`w-full border rounded-md px-3 py-2 text-xs font-black ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-100 text-slate-900'}`}
                                                                     />
                                                                 </div>
                                                             </>
@@ -1219,7 +1206,7 @@ export default function Home() {
                                                             removeAnnotation(selectedNodeId!);
                                                             setSelectedNodeId(null);
                                                         }}
-                                                        className="w-full flex items-center justify-center gap-2 py-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-100 transition-colors"
+                                                        className="w-full flex items-center justify-center gap-2 py-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-rose-100 transition-colors"
                                                     >
                                                         <Trash2 size={14} />
                                                         Delete Node
@@ -1229,7 +1216,7 @@ export default function Home() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-8 bg-slate-50 rounded-[32px] border-2 border-dashed border-slate-100 text-center">
+                                    <div className="p-8 bg-slate-50 rounded-md border-2 border-dashed border-slate-100 text-center">
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">Select a node from the tree below to adjust its transform properties</p>
                                     </div>
                                 )}
@@ -1250,13 +1237,13 @@ export default function Home() {
                                     Technical Blueprint (L2)
                                     <div className="h-px flex-1 bg-slate-100"></div>
                                 </h3>
-                                <div className={`p-4 rounded-2xl font-mono text-[9px] overflow-x-auto whitespace-pre transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-950 text-indigo-400 border border-slate-800' : 'bg-slate-50 text-indigo-600 border border-slate-100'}`}>
+                                <div className={`p-4 rounded-sm font-mono text-[9px] overflow-x-auto whitespace-pre transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-950 text-indigo-400 border border-slate-800' : 'bg-slate-50 text-indigo-600 border border-slate-100'}`}>
                                     {JSON.stringify(sceneGraph, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2)}
                                 </div>
                                 <button
                                     title="Copy Layer 2 JSON"
                                     onClick={() => navigator.clipboard.writeText(JSON.stringify(sceneGraph, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2))}
-                                    className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                    className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                 >
                                     Copy Layer JSON
                                 </button>
@@ -1276,20 +1263,20 @@ export default function Home() {
                                     Global Canvas
                                     <div className="h-px flex-1 bg-rose-100"></div>
                                 </h3>
-                                <div className={`p-6 rounded-[32px] border shadow-sm space-y-4 ${uiMode === 'dark' ? 'bg-slate-800/50 border-rose-500/20' : 'bg-white border-rose-100'}`}>
+                                <div className={`p-6 rounded-md border shadow-none space-y-4 ${uiMode === 'dark' ? 'bg-slate-800/50 border-rose-500/20' : 'bg-white border-rose-100'}`}>
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-1">
                                             <label className={`text-[10px] font-black uppercase ${uiMode === 'dark' ? 'text-rose-300' : 'text-rose-900'}`}>Background Color</label>
                                             <p className="text-[9px] font-bold text-rose-300">Set the overall page background</p>
                                         </div>
                                         <div className="flex items-center gap-4">
-                                            <div className={`text-[10px] font-mono font-black px-2 py-1 rounded-lg uppercase ${uiMode === 'dark' ? 'text-rose-400 bg-rose-950/30' : 'text-rose-500 bg-rose-50'}`}>{theme.backgroundColor}</div>
+                                            <div className={`text-[10px] font-mono font-black px-2 py-1 rounded-sm uppercase ${uiMode === 'dark' ? 'text-rose-400 bg-rose-950/30' : 'text-rose-500 bg-rose-50'}`}>{theme.backgroundColor}</div>
                                             <input
                                                 title="Background Color"
                                                 type="color"
                                                 value={theme.backgroundColor}
                                                 onChange={(e) => setTheme(prev => ({ ...prev, backgroundColor: e.target.value }))}
-                                                className="w-10 h-10 rounded-xl border-none p-0 bg-transparent cursor-pointer hover:scale-110 transition-transform"
+                                                className="w-10 h-10 rounded-md border-none p-0 bg-transparent cursor-pointer hover:scale-110 transition-transform"
                                             />
                                         </div>
                                     </div>
@@ -1298,7 +1285,7 @@ export default function Home() {
 
                             {selectedNodeId ? (
                                 <div className="space-y-10">
-                                    <div className={`p-8 rounded-[40px] border shadow-xl relative overflow-hidden group transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-800/80 border-rose-500/30 shadow-rose-950/20' : 'bg-rose-50 border-rose-100/50 shadow-rose-100/20'}`}>
+                                    <div className={`p-8 rounded-md border shadow-none relative overflow-hidden group transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-800/80 border-rose-500/30 shadow-none' : 'bg-rose-50 border-rose-100/50 shadow-none'}`}>
                                         <div className="absolute top-0 right-0 p-8 text-rose-200 group-hover:rotate-12 transition-transform duration-700">
                                             <Palette size={80} strokeWidth={1} />
                                         </div>
@@ -1307,14 +1294,14 @@ export default function Home() {
 
                                         <div className="space-y-8 relative z-10">
                                             <div className="space-y-6">
-                                                <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl w-full">
+                                                <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-sm w-full">
                                                     <button
                                                         title="Convert to Solid Color"
                                                         onClick={() => {
                                                             const currentFill = typeof currentNodeStyle?.fill === 'string' ? currentNodeStyle.fill : '#6366f1';
                                                             updateNodeStyle(selectedNodeId!, { fill: currentFill });
                                                         }}
-                                                        className={`flex-1 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${typeof currentNodeStyle?.fill === 'string' ? 'bg-indigo-600 text-white shadow-lg' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+                                                        className={`flex-1 py-3 rounded-sm text-[10px] font-black uppercase tracking-widest transition-all ${typeof currentNodeStyle?.fill === 'string' ? 'bg-indigo-600 text-white shadow-none' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
                                                     >
                                                         Solid
                                                     </button>
@@ -1331,7 +1318,7 @@ export default function Home() {
                                                                 }
                                                             });
                                                         }}
-                                                        className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${typeof currentNodeStyle?.fill === 'object' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-400'}`}
+                                                        className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${typeof currentNodeStyle?.fill === 'object' ? 'bg-white dark:bg-slate-700 shadow-none text-slate-900 dark:text-white' : 'text-slate-400'}`}
                                                     >
                                                         Gradient
                                                     </button>
@@ -1341,7 +1328,7 @@ export default function Home() {
                                                     <div className="space-y-4">
                                                         <label className="text-[10px] font-black text-rose-400 dark:text-rose-300 uppercase tracking-widest block px-1">Gradient Stops</label>
                                                         {(currentNodeStyle?.fill as any)?.stops?.map((stop: any, idx: number) => (
-                                                            <div key={idx} className="flex items-center gap-4 bg-white/50 dark:bg-slate-900/50 p-3 rounded-2xl border border-rose-100/50 dark:border-slate-800">
+                                                            <div key={idx} className="flex items-center gap-4 bg-white/50 dark:bg-slate-900/50 p-3 rounded-sm border border-rose-100/50 dark:border-slate-800">
                                                                 <input
                                                                     title={`Stop ${idx} Color`}
                                                                     type="color"
@@ -1352,7 +1339,7 @@ export default function Home() {
                                                                         newStops[idx] = { ...newStops[idx], color: e.target.value };
                                                                         updateNodeStyle(selectedNodeId!, { fill: { ...currentFill, stops: newStops } });
                                                                     }}
-                                                                    className="w-8 h-8 rounded-lg cursor-pointer"
+                                                                    className="w-8 h-8 rounded-sm cursor-pointer"
                                                                 />
                                                                 <input
                                                                     title={`Stop ${idx} Offset`}
@@ -1412,7 +1399,7 @@ export default function Home() {
                                                                         title="Font Weight"
                                                                         value={currentNodeStyle?.fontWeight ?? 500}
                                                                         onChange={(e) => updateNodeStyle(selectedNodeId!, { fontWeight: Number(e.target.value) })}
-                                                                        className={`w-full text-[11px] font-black rounded-xl border px-3 py-2 ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-rose-100 text-rose-900'}`}
+                                                                        className={`w-full text-[11px] font-black rounded-md border px-3 py-2 ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-rose-100 text-rose-900'}`}
                                                                     >
                                                                         <option value={300}>Light (300)</option>
                                                                         <option value={400}>Regular (400)</option>
@@ -1432,7 +1419,7 @@ export default function Home() {
                                                                         type="color"
                                                                         value={currentNodeStyle?.fontColor ?? '#000000'}
                                                                         onChange={(e) => updateNodeStyle(selectedNodeId!, { fontColor: e.target.value })}
-                                                                        className="w-full h-10 rounded-xl border-none p-0 bg-transparent cursor-pointer"
+                                                                        className="w-full h-10 rounded-md border-none p-0 bg-transparent cursor-pointer"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -1450,7 +1437,7 @@ export default function Home() {
                                                                         key={icon}
                                                                         title={`Set icon to ${icon}`}
                                                                         onClick={() => updateNodeStyle(selectedNodeId!, { iconName: icon })}
-                                                                        className={`p-3 rounded-xl border flex items-center justify-center transition-all ${currentNodeStyle?.iconName === icon ? 'bg-rose-900 text-white' : 'bg-white text-rose-400 border-rose-100'}`}
+                                                                        className={`p-3 rounded-md border flex items-center justify-center transition-all ${currentNodeStyle?.iconName === icon ? 'bg-rose-900 text-white' : 'bg-white text-rose-400 border-rose-100'}`}
                                                                     >
                                                                         {React.createElement((LucideIcons as any)[icon], { size: 16 })}
                                                                     </button>
@@ -1464,8 +1451,8 @@ export default function Home() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center py-20 px-10 bg-slate-50 rounded-[40px] border-2 border-dashed border-slate-100 animate-pulse">
-                                    <div className="p-4 bg-white rounded-3xl shadow-sm mb-6"><MousePointer2 size={32} className="text-slate-200" /></div>
+                                <div className="flex flex-col items-center justify-center py-20 px-10 bg-slate-50 rounded-md border-2 border-dashed border-slate-100 animate-pulse">
+                                    <div className="p-4 bg-white rounded-sm shadow-none mb-6"><MousePointer2 size={32} className="text-slate-200" /></div>
                                     <p className="text-xs font-black text-slate-400 text-center uppercase tracking-widest leading-relaxed">Select any node from the SCENE graph or PREVIEW to customize its visual blueprint</p>
                                 </div>
                             )}
@@ -1475,13 +1462,13 @@ export default function Home() {
                                     Technical Blueprint (L3)
                                     <div className="h-px flex-1 bg-rose-100"></div>
                                 </h3>
-                                <div className={`p-4 rounded-2xl font-mono text-[9px] overflow-x-auto whitespace-pre transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-950 text-rose-400 border border-rose-900/30' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
+                                <div className={`p-4 rounded-sm font-mono text-[9px] overflow-x-auto whitespace-pre transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-950 text-rose-400 border border-rose-900/30' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
                                     {JSON.stringify(theme, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2)}
                                 </div>
                                 <button
                                     title="Copy Layer 3 JSON"
                                     onClick={() => navigator.clipboard.writeText(JSON.stringify(theme, (key, value) => value instanceof Map ? Object.fromEntries(value) : value, 2))}
-                                    className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                    className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                 >
                                     Copy Layer JSON
                                 </button>
@@ -1499,11 +1486,11 @@ export default function Home() {
                             <section className="space-y-6">
                                 <div className="flex justify-between items-center px-1">
                                     <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dimensions</h4>
-                                    <button onClick={addDimension} className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md hover:bg-emerald-100 transition-colors">Add Dim</button>
+                                    <button onClick={addDimension} className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-sm hover:bg-emerald-100 transition-colors">Add Dim</button>
                                 </div>
                                 <div className="space-y-3">
                                     {rawData.dimensions.map((dim, i) => (
-                                        <div key={i} className={`flex gap-2 p-3 rounded-2xl border shadow-sm items-center transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+                                        <div key={i} className={`flex gap-2 p-3 rounded-sm border shadow-none items-center transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
                                             <input
                                                 title="Dimension Label"
                                                 className={`flex-1 text-[11px] font-bold border-none bg-transparent focus:ring-0 transition-colors ${uiMode === 'dark' ? 'text-white' : 'text-slate-900'}`}
@@ -1532,11 +1519,11 @@ export default function Home() {
                             <section className="space-y-6">
                                 <div className="flex justify-between items-center px-1">
                                     <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Measures</h4>
-                                    <button onClick={addMeasure} className="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-1 rounded-md hover:bg-blue-100 transition-colors">Add Msr</button>
+                                    <button onClick={addMeasure} className="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-1 rounded-sm hover:bg-blue-100 transition-colors">Add Msr</button>
                                 </div>
                                 <div className="space-y-3">
                                     {rawData.measures.map((msr, i) => (
-                                        <div key={i} className={`flex gap-2 p-3 rounded-2xl border shadow-sm items-center transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
+                                        <div key={i} className={`flex gap-2 p-3 rounded-sm border shadow-none items-center transition-all ${uiMode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'}`}>
                                             <input
                                                 title="Measure Label"
                                                 className={`flex-1 text-[11px] font-bold border-none bg-transparent focus:ring-0 transition-colors ${uiMode === 'dark' ? 'text-white' : 'text-slate-900'}`}
@@ -1565,15 +1552,15 @@ export default function Home() {
                             <section className="space-y-4">
                                 <div className="flex justify-between items-center px-1">
                                     <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rows Management</h4>
-                                    <button onClick={addRow} className="text-[10px] font-black text-slate-600 bg-slate-100 px-3 py-1 rounded-md hover:bg-slate-200 transition-colors">Add Row</button>
+                                    <button onClick={addRow} className="text-[10px] font-black text-slate-600 bg-slate-100 px-3 py-1 rounded-sm hover:bg-slate-200 transition-colors">Add Row</button>
                                 </div>
                                 <div className="space-y-3">
                                     {rawData.data.map((row: any, i) => (
-                                        <div key={i} className={`flex gap-3 items-center p-5 rounded-3xl border group transition-all shadow-sm ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 hover:border-indigo-500' : 'bg-white border-slate-100 hover:border-slate-300'}`}>
+                                        <div key={i} className={`flex gap-3 items-center p-5 rounded-sm border group transition-all shadow-none ${uiMode === 'dark' ? 'bg-slate-800 border-slate-700 hover:border-indigo-500' : 'bg-white border-slate-100 hover:border-slate-300'}`}>
                                             <div className="flex-1 space-y-2">
                                                 <input
                                                     title="Dimension Value"
-                                                    className={`w-full text-[11px] font-black border-none rounded-lg px-3 py-1 focus:ring-1 transition-colors ${uiMode === 'dark' ? 'bg-slate-900 text-white focus:ring-slate-700' : 'bg-slate-50 text-slate-900 focus:ring-slate-200'}`}
+                                                    className={`w-full text-[11px] font-black border-none rounded-sm px-3 py-1 focus:ring-1 transition-colors ${uiMode === 'dark' ? 'bg-slate-900 text-white focus:ring-slate-700' : 'bg-slate-50 text-slate-900 focus:ring-slate-200'}`}
                                                     value={row[rawData.meta?.mapping?.x || 'category']}
                                                     onChange={(e) => {
                                                         const newData = [...rawData.data];
@@ -1585,7 +1572,7 @@ export default function Home() {
                                                     <input
                                                         title="Numeric Value"
                                                         type="number"
-                                                        className={`flex-1 px-3 py-1 border rounded-lg text-xs font-bold outline-none transition-colors ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white focus:ring-1 focus:ring-emerald-500' : 'bg-white border-slate-100 text-slate-900 focus:ring-1 focus:ring-emerald-500'}`}
+                                                        className={`flex-1 px-3 py-1 border rounded-sm text-xs font-bold outline-none transition-colors ${uiMode === 'dark' ? 'bg-slate-900 border-slate-700 text-white focus:ring-1 focus:ring-emerald-500' : 'bg-white border-slate-100 text-slate-900 focus:ring-1 focus:ring-emerald-500'}`}
                                                         value={row[rawData.meta?.mapping?.value || 'value']}
                                                         onChange={(e) => updateDataValue(i, Number(e.target.value))}
                                                     />
@@ -1602,13 +1589,13 @@ export default function Home() {
                                     Technical Blueprint (L0)
                                     <div className="h-px flex-1 bg-emerald-100"></div>
                                 </h3>
-                                <div className={`p-4 rounded-2xl font-mono text-[9px] overflow-x-auto whitespace-pre transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-950 text-emerald-400 border border-slate-800' : 'bg-slate-50 text-emerald-600 border border-emerald-100'}`}>
+                                <div className={`p-4 rounded-sm font-mono text-[9px] overflow-x-auto whitespace-pre transition-colors duration-500 ${uiMode === 'dark' ? 'bg-slate-950 text-emerald-400 border border-slate-800' : 'bg-slate-50 text-emerald-600 border border-emerald-100'}`}>
                                     {JSON.stringify(rawData, null, 2)}
                                 </div>
                                 <button
                                     title="Copy Layer 0 JSON"
                                     onClick={() => navigator.clipboard.writeText(JSON.stringify(rawData, null, 2))}
-                                    className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                    className="w-full py-2 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                 >
                                     Copy Layer JSON
                                 </button>
